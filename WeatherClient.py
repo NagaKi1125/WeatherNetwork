@@ -98,132 +98,6 @@ def showIcon(iconName, size):
     return pixmap
 
 
-def hourlyForecast(hourly):
-    # 0 dt, 1 temp, 2 icon, 3 desc, 4 wind, 5 cloud
-    hourlyFore = QtWidgets.QHBoxLayout()
-    for i in hourly:
-        if i == '':
-            continue
-        else:
-            hourlyDetails = i.split('_')  # list of hourly details
-            mainCont = QtWidgets.QWidget()
-            cont = QtWidgets.QVBoxLayout()
-            font = QtGui.QFont()
-            if hourlyDetails[0] == '00:00:00':
-                font.setBold(True)
-                font.setUnderline(True)
-            else:
-                font.setUnderline(True)
-
-            lblTime = QtWidgets.QLabel('{}'.format(hourlyDetails[0]))
-            lblTime.setFont(font)
-            lblTemp = QtWidgets.QLabel('{} C'.format(hourlyDetails[1]))
-            lblIcon = QtWidgets.QLabel()
-            lblIcon.setStyleSheet("background-color: rgb(159, 159, 159);")
-            lblIcon.setPixmap(showIcon(hourlyDetails[2], 0))
-            lblDesc = QtWidgets.QLabel('{}'.format(hourlyDetails[3]))
-            lblWindCloud = QtWidgets.QLabel('{} m/s - {} %'.format(hourlyDetails[4], hourlyDetails[5]))
-            cont.addWidget(lblTime)
-            cont.addWidget(lblTemp)
-            cont.addWidget(lblIcon)
-            cont.addWidget(lblDesc)
-            cont.addWidget(lblWindCloud)
-            mainCont.setLayout(cont)
-            hourlyFore.addWidget(mainCont)
-
-    return hourlyFore
-
-
-def dailyForecast(daily):
-    # 0 dt, 1 icon, 2 minTemp, 3 maxTemp, 4 weatherDesc, 5 humidity, 6 wind_speed, 7 morTemp, 8 dayTemp,
-    # 9 eveTemp, 10 nightTemp, 11 sunrise, 12 sunset, 13 clouds, 14 pressure
-    boldFont = QtGui.QFont()
-    boldFont.setBold(True)
-    italicFont = QtGui.QFont()
-    italicFont.setItalic(True)
-
-    # 8 days forecast
-    dailyForecast = QtWidgets.QVBoxLayout()
-    for i in daily:
-        if i == '':
-            continue
-        else:
-            dailyDetails = i.split('_')  # list of daily details
-            Frame = QtWidgets.QWidget()
-            FrameBox = QtWidgets.QVBoxLayout()
-            MainDe = QtWidgets.QWidget()
-            MainDetails = QtWidgets.QHBoxLayout()
-            # details info main
-            lblDt = QtWidgets.QLabel('{}'.format(dailyDetails[0]))
-            lblDt.setFrameShape(QtWidgets.QFrame.Box)
-            lblDt.setFont(boldFont)
-            lblIcon = QtWidgets.QLabel()
-            lblIcon.setPixmap(showIcon(dailyDetails[1], 0))
-            lblIcon.setStyleSheet("background-color: rgb(159, 159, 159);")
-            lblMinMax = QtWidgets.QLabel('{}/{} C'.format(dailyDetails[2], dailyDetails[3]))
-            lblDescription = QtWidgets.QLabel('{}'.format(dailyDetails[4]))
-            lblDescription.setFont(italicFont)
-            lblDescription.setAlignment(QtCore.Qt.AlignCenter)
-            MainDetails.addWidget(lblDt)
-            MainDetails.addWidget(lblIcon)
-            MainDetails.addWidget(lblMinMax)
-            MainDetails.addWidget(lblDescription)
-
-            # subDetails
-            subDe= QtWidgets.QWidget()
-            subDetails = QtWidgets.QFormLayout()
-            lblHumi = QtWidgets.QLabel('Humidity:')
-            lblInfoHumi = QtWidgets.QLabel('{} %'.format(dailyDetails[5]))
-            lblWindSpeed = QtWidgets.QLabel('Wind Speed:')
-            lblInfoWindSpd = QtWidgets.QLabel('{} m/s'.format(dailyDetails[6]))
-            lblSunrise = QtWidgets.QLabel('Sunrise at:')
-            lblInfoSunrise = QtWidgets.QLabel('{} am'.format(dailyDetails[11]))
-            lblSunset = QtWidgets.QLabel('Sunset at:')
-            lblInfoSunset = QtWidgets.QLabel('{} pm'.format(dailyDetails[12]))
-            lblCloud = QtWidgets.QLabel('Cloud:')
-            lblInfoCloud = QtWidgets.QLabel('{} %'.format(dailyDetails[13]))
-            lblPressure = QtWidgets.QLabel('Pressure:')
-            lblInfoPressure = QtWidgets.QLabel('{} hPa'.format(dailyDetails[14]))
-            subDetails.addRow(lblSunrise, lblInfoSunrise)
-            subDetails.addRow(lblSunset, lblInfoSunset)
-            subDetails.addRow(lblHumi, lblInfoHumi)
-            subDetails.addRow(lblWindSpeed, lblInfoWindSpd)
-            subDetails.addRow(lblCloud, lblInfoCloud)
-            subDetails.addRow(lblPressure, lblInfoPressure)
-            subDe.setLayout(subDetails)
-            # day part temp box details
-            dayPartTempBox = QtWidgets.QScrollArea()
-            dayInfo = QtWidgets.QGridLayout()
-            dayPartTempBox.setLayout(dayInfo)
-            lblMor = QtWidgets.QLabel('Morning')
-            lblTempMor = QtWidgets.QLabel('{} C'.format(dailyDetails[7]))
-            lblNight = QtWidgets.QLabel('Night')
-            lblTempNight = QtWidgets.QLabel('{} C'.format(dailyDetails[10]))
-            lblAfter = QtWidgets.QLabel('Afternoon')
-            lblTempAfter = QtWidgets.QLabel('{} C'.format(dailyDetails[8]))
-            lblEve = QtWidgets.QLabel('Evening')
-            lblTempEve = QtWidgets.QLabel('{} C'.format(dailyDetails[9]))
-            dayInfo.addWidget(lblMor, 1, 0)
-            dayInfo.addWidget(lblTempMor, 2, 0)
-            dayInfo.addWidget(lblAfter, 1, 1)
-            dayInfo.addWidget(lblTempAfter, 2, 1)
-            dayInfo.addWidget(lblEve, 1, 2)
-            dayInfo.addWidget(lblTempEve, 2, 2)
-            dayInfo.addWidget(lblNight, 1, 3)
-            dayInfo.addWidget(lblTempNight, 2, 3)
-
-            dayInfo.addWidget(subDe, 0, 0, 1, 4)
-
-            MainDe.setLayout(MainDetails)
-            FrameBox.addWidget(MainDe)
-            FrameBox.addWidget(dayPartTempBox)
-            Frame.setLayout(FrameBox)
-            dailyForecast.addWidget(Frame)
-            dailyForecast.addWidget(QtWidgets.QLabel('---------------------------------------------'))
-
-    return dailyForecast
-
-
 def mapView(lat, lon, zoom):
     mapWidget = MapWidget()
     mapLayout = QtWidgets.QVBoxLayout()
@@ -259,8 +133,6 @@ class Client(QtWidgets.QFrame, client.Ui_mainLayout):
         super(Client, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
-        self.hourlyForecast = QtWidgets.QHBoxLayout()
-        self.dailyForecast = QtWidgets.QVBoxLayout()
         # get current location
         currLocation = getLocation()
 
@@ -363,15 +235,11 @@ class Client(QtWidgets.QFrame, client.Ui_mainLayout):
 
             # 8 days forecast
             daily = text[1].split('+')  # list of daily object
-            self.dailyForecast = QtWidgets.QVBoxLayout()
-            self.dailyForecast = dailyForecast(daily)
-            self.scrollAreaForecast.setLayout(self.dailyForecast)
+            self.dailyForecast(daily)
 
             # hourly forecast
             hourly = text[2].split('+')
-            self.hourlyForecast = QtWidgets.QHBoxLayout()
-            self.hourlyForecast = hourlyForecast(hourly)
-            self.scrollAreaHourly.setLayout(self.hourlyForecast)
+            self.hourlyForecast(hourly)
 
         # c for return back
         elif key == 'c':
@@ -400,19 +268,12 @@ class Client(QtWidgets.QFrame, client.Ui_mainLayout):
             self.mapLayout = mapView(currLocation.latitude, currLocation.longitude, 11)
 
             # 8 days forecast
-            #  remove first
             daily = text[1].split('+')  # list of daily object
-            self.deleteLayout(self.dailyForecast)
-            self.dailyForecast = QtWidgets.QVBoxLayout()
-            self.dailyForecast = dailyForecast(daily)
-            self.scrollAreaForecast.setLayout(self.dailyForecast)
+            self.dailyForecast(daily)
 
             # hourly forecast
             hourly = text[2].split('+')
-            self.deleteLayout(self.hourlyForecast)
-            self.hourlyForecast = QtWidgets.QHBoxLayout()
-            self.hourlyForecast = hourlyForecast(hourly)
-            self.scrollAreaHourly.setLayout(self.hourlyForecast)
+            self.hourlyForecast(hourly)
 
         # d for search place
         elif key == 'd':
@@ -436,30 +297,276 @@ class Client(QtWidgets.QFrame, client.Ui_mainLayout):
             self.mapLayout = mapView(lat, long, 11)
 
             # 8 days forecast
-            #  remove first
             daily = text[1].split('+')  # list of daily object
-            self.deleteLayout(self.dailyForecast)
-            self.dailyForecast = QtWidgets.QVBoxLayout()
-            self.dailyForecast = dailyForecast(daily)
-            self.scrollAreaForecast.setLayout(self.dailyForecast)
+            self.dailyForecast(daily)
 
             # hourly forecast
             hourly = text[2].split('+')
-            self.deleteLayout(self.hourlyForecast)
-            self.hourlyForecast = QtWidgets.QHBoxLayout()
-            self.hourlyForecast = hourlyForecast(hourly)
-            self.scrollAreaHourly.setLayout(self.hourlyForecast)
+            self.hourlyForecast(hourly)
 
-    def deleteLayout(self, layout):
-        if layout is not None:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.deleteLater()
-                else:
-                    self.deleteLayout(item.layout())
-            sip.delete(layout)
+    def hourlyForecast(self, hourly):
+        boldFont = QtGui.QFont()
+        boldFont.setBold(True)
+
+        # split each time infor hourly[0]=''
+        time1 = hourly[1].split('_')
+        time2 = hourly[2].split('_')
+        time3 = hourly[3].split('_')
+        time4 = hourly[4].split('_')
+        time5 = hourly[5].split('_')
+        time6 = hourly[6].split('_')
+        time7 = hourly[7].split('_')
+        time8 = hourly[8].split('_')
+        time9 = hourly[9].split('_')
+        time10 = hourly[10].split('_')
+        time11 = hourly[11].split('_')
+        time12 = hourly[12].split('_')
+        time13 = hourly[13].split('_')
+        time14 = hourly[14].split('_')
+        time15 = hourly[15].split('_')
+        time16 = hourly[16].split('_')
+        time17 = hourly[17].split('_')
+        time18 = hourly[18].split('_')
+        time19 = hourly[19].split('_')
+        time20 = hourly[20].split('_')
+        time21 = hourly[21].split('_')
+        time22 = hourly[22].split('_')
+        time23 = hourly[23].split('_')
+        time24 = hourly[24].split('_')
+
+        # adding info  0 dt, 1 temp, 2 icon, 3 desc, 4 wind, 5 cloud
+        # time1
+        self.lblHTime.setText('{}'.format(time1[0]))
+        self.lblHtemp.setText('{}C'.format(time1[1]))
+        self.lblHIcon.setPixmap(showIcon(time1[2], 0))
+        self.lblHWeather.setText('{}'.format(time1[3]))
+        self.lblHCloudWind.setText('{}m/s - {}%'.format(time1[4], time1[5]))
+        # time2
+        self.lblHTime_2.setText('{}'.format(time2[0]))
+        self.lblHtemp_2.setText('{}C'.format(time2[1]))
+        self.lblHIcon_2.setPixmap(showIcon(time2[2], 0))
+        self.lblHWeather_2.setText('{}'.format(time2[3]))
+        self.lblHCloudWind_2.setText('{}m/s - {}%'.format(time2[4], time2[5]))
+        # time3
+        self.lblHTime_3.setText('{}'.format(time3[0]))
+        self.lblHtemp_3.setText('{}C'.format(time3[1]))
+        self.lblHIcon_3.setPixmap(showIcon(time3[2], 0))
+        self.lblHWeather_3.setText('{}'.format(time3[3]))
+        self.lblHCloudWind_3.setText('{}m/s - {}%'.format(time3[4], time3[5]))
+        # time4
+        self.lblHTime_4.setText('{}'.format(time4[0]))
+        self.lblHtemp_4.setText('{}C'.format(time4[1]))
+        self.lblHIcon_4.setPixmap(showIcon(time4[2], 0))
+        self.lblHWeather_4.setText('{}'.format(time4[3]))
+        self.lblHCloudWind_4.setText('{}m/s - {}%'.format(time4[4], time4[5]))
+        # time5
+        self.lblHTime_5.setText('{}'.format(time5[0]))
+        self.lblHtemp_5.setText('{}C'.format(time5[1]))
+        self.lblHIcon_5.setPixmap(showIcon(time5[2], 0))
+        self.lblHWeather_5.setText('{}'.format(time5[3]))
+        self.lblHCloudWind_5.setText('{}m/s - {}%'.format(time5[4], time5[5]))
+        # time6
+        self.lblHTime_6.setText('{}'.format(time6[0]))
+        self.lblHtemp_6.setText('{}C'.format(time6[1]))
+        self.lblHIcon_6.setPixmap(showIcon(time6[2], 0))
+        self.lblHWeather_6.setText('{}'.format(time6[3]))
+        self.lblHCloudWind_6.setText('{}m/s - {}%'.format(time6[4], time6[5]))
+        # time7
+        self.lblHTime_7.setText('{}'.format(time7[0]))
+        self.lblHtemp_7.setText('{}C'.format(time7[1]))
+        self.lblHIcon_7.setPixmap(showIcon(time7[2], 0))
+        self.lblHWeather_7.setText('{}'.format(time7[3]))
+        self.lblHCloudWind_8.setText('{}m/s - {}%'.format(time7[4], time7[5]))
+        # time8
+        self.lblHTime_8.setText('{}'.format(time8[0]))
+        self.lblHtemp_8.setText('{}C'.format(time8[1]))
+        self.lblHIcon_8.setPixmap(showIcon(time8[2], 0))
+        self.lblHWeather_8.setText('{}'.format(time8[3]))
+        self.lblHCloudWind_8.setText('{}m/s - {}%'.format(time8[4], time8[5]))
+        # time9
+        self.lblHTime_9.setText('{}'.format(time9[0]))
+        self.lblHtemp_9.setText('{}C'.format(time9[1]))
+        self.lblHIcon_9.setPixmap(showIcon(time9[2], 0))
+        self.lblHWeather_9.setText('{}'.format(time9[3]))
+        self.lblHCloudWind_9.setText('{}m/s - {}%'.format(time9[4], time9[5]))
+        # time10
+        self.lblHTime_10.setText('{}'.format(time10[0]))
+        self.lblHtemp_10.setText('{}C'.format(time10[1]))
+        self.lblHIcon_10.setPixmap(showIcon(time10[2], 0))
+        self.lblHWeather_10.setText('{}'.format(time10[3]))
+        self.lblHCloudWind_10.setText('{}m/s - {}%'.format(time10[4], time10[5]))
+        # time11
+        self.lblHTime_11.setText('{}'.format(time11[0]))
+        self.lblHtemp_11.setText('{}C'.format(time11[1]))
+        self.lblHIcon_11.setPixmap(showIcon(time11[2], 0))
+        self.lblHWeather_11.setText('{}'.format(time11[3]))
+        self.lblHCloudWind_11.setText('{}m/s - {}%'.format(time11[4], time11[5]))
+        # time12
+        self.lblHTime_12.setText('{}'.format(time12[0]))
+        self.lblHtemp_12.setText('{}C'.format(time12[1]))
+        self.lblHIcon_12.setPixmap(showIcon(time12[2], 0))
+        self.lblHWeather_12.setText('{}'.format(time12[3]))
+        self.lblHCloudWind_12.setText('{}m/s - {}%'.format(time12[4], time12[5]))
+        # time13
+        self.lblHTime_13.setText('{}'.format(time13[0]))
+        self.lblHtemp_13.setText('{}C'.format(time13[1]))
+        self.lblHIcon_13.setPixmap(showIcon(time13[2], 0))
+        self.lblHWeather_13.setText('{}'.format(time13[3]))
+        self.lblHCloudWind_13.setText('{}m/s - {}%'.format(time13[4], time13[5]))
+        # time14
+        self.lblHTime_14.setText('{}'.format(time14[0]))
+        self.lblHtemp_14.setText('{}C'.format(time14[1]))
+        self.lblHIcon_14.setPixmap(showIcon(time14[2], 0))
+        self.lblHWeather_14.setText('{}'.format(time14[3]))
+        self.lblHCloudWind_14.setText('{}m/s - {}%'.format(time14[4], time14[5]))
+        # time15
+        self.lblHTime_15.setText('{}'.format(time15[0]))
+        self.lblHtemp_15.setText('{}C'.format(time15[1]))
+        self.lblHIcon_15.setPixmap(showIcon(time15[2], 0))
+        self.lblHWeather_15.setText('{}'.format(time15[3]))
+        self.lblHCloudWind_15.setText('{}m/s - {}%'.format(time15[4], time15[5]))
+        # time16
+        self.lblHTime_16.setText('{}'.format(time16[0]))
+        self.lblHtemp_16.setText('{}C'.format(time16[1]))
+        self.lblHIcon_16.setPixmap(showIcon(time16[2], 0))
+        self.lblHWeather_16.setText('{}'.format(time16[3]))
+        self.lblHCloudWind_16.setText('{}m/s - {}%'.format(time16[4], time16[5]))
+        # time17
+        self.lblHTime_17.setText('{}'.format(time17[0]))
+        self.lblHtemp_17.setText('{}C'.format(time17[1]))
+        self.lblHIcon_17.setPixmap(showIcon(time17[2], 0))
+        self.lblHWeather_17.setText('{}'.format(time17[3]))
+        self.lblHCloudWind_17.setText('{}m/s - {}%'.format(time17[4], time17[5]))
+        # time8
+        self.lblHTime_18.setText('{}'.format(time18[0]))
+        self.lblHtemp_18.setText('{}C'.format(time18[1]))
+        self.lblHIcon_18.setPixmap(showIcon(time18[2], 0))
+        self.lblHWeather_18.setText('{}'.format(time18[3]))
+        self.lblHCloudWind_18.setText('{}m/s - {}%'.format(time18[4], time18[5]))
+        # time19
+        self.lblHTime_19.setText('{}'.format(time19[0]))
+        self.lblHtemp_19.setText('{}C'.format(time19[1]))
+        self.lblHIcon_19.setPixmap(showIcon(time19[2], 0))
+        self.lblHWeather_19.setText('{}'.format(time19[3]))
+        self.lblHCloudWind_19.setText('{}m/s - {}%'.format(time19[4], time19[5]))
+        # time20
+        self.lblHTime_20.setText('{}'.format(time20[0]))
+        self.lblHtemp_20.setText('{}C'.format(time20[1]))
+        self.lblHIcon_20.setPixmap(showIcon(time20[2], 0))
+        self.lblHWeather_20.setText('{}'.format(time20[3]))
+        self.lblHCloudWind_20.setText('{}m/s - {}%'.format(time20[4], time20[5]))
+        # time21
+        self.lblHTime_21.setText('{}'.format(time21[0]))
+        self.lblHtemp_21.setText('{}C'.format(time21[1]))
+        self.lblHIcon_21.setPixmap(showIcon(time21[2], 0))
+        self.lblHWeather_21.setText('{}'.format(time21[3]))
+        self.lblHCloudWind_21.setText('{}m/s - {}%'.format(time21[4], time21[5]))
+        # time22
+        self.lblHTime_22.setText('{}'.format(time22[0]))
+        self.lblHtemp_22.setText('{}C'.format(time22[1]))
+        self.lblHIcon_22.setPixmap(showIcon(time22[2], 0))
+        self.lblHWeather_22.setText('{}'.format(time22[3]))
+        self.lblHCloudWind_22.setText('{}m/s - {}%'.format(time22[4], time22[5]))
+        # time23
+        self.lblHTime_23.setText('{}'.format(time23[0]))
+        self.lblHtemp_23.setText('{}C'.format(time23[1]))
+        self.lblHIcon_23.setPixmap(showIcon(time23[2], 0))
+        self.lblHWeather_23.setText('{}'.format(time23[3]))
+        self.lblHCloudWind_23.setText('{}m/s - {}%'.format(time23[4], time23[5]))
+        # time1
+        self.lblHTime_24.setText('{}'.format(time24[0]))
+        self.lblHtemp_24.setText('{}C'.format(time24[1]))
+        self.lblHIcon_24.setPixmap(showIcon(time24[2], 0))
+        self.lblHWeather_24.setText('{}'.format(time24[3]))
+        self.lblHCloudWind_24.setText('{}m/s - {}%'.format(time24[4], time24[5]))
+
+    def dailyForecast(self, daily):
+        # 0 dt, 1 tempMin, 2 tempMax, 3 weather, 4 weatherDesc, 5 icon, 6 morTemp, 7 dayTemp,
+        # 8 eveTemp, 9 nightTemp, 10 sunrise, 11 sunset
+        boldFont = QtGui.QFont()
+        boldFont.setBold(True)
+
+        # split to each day information daily[0] = ''
+        day1 = daily[1].split('_')
+        day2 = daily[2].split('_')
+        day3 = daily[3].split('_')
+        day4 = daily[4].split('_')
+        day5 = daily[5].split('_')
+        day6 = daily[6].split('_')
+        day7 = daily[7].split('_')
+        day8 = daily[8].split('_')
+
+        # add info to label for each day (0 dt)
+        # day date
+        self.lblDateDay.setText('{}'.format(day1[0]))
+        self.lblDateDay_2.setText('{}'.format(day2[0]))
+        self.lblDateDay_3.setText('{}'.format(day3[0]))
+        self.lblDateDay_4.setText('{}'.format(day4[0]))
+        self.lblDateDay_5.setText('{}'.format(day5[0]))
+        self.lblDateDay_6.setText('{}'.format(day6[0]))
+        self.lblDateDay_7.setText('{}'.format(day7[0]))
+        self.lblDateDay_8.setText('{}'.format(day8[0]))
+
+        # weather tempurate (1 min - 2 max || 3 weather.4 desc)
+        self.lblWeatherTempDay.setText('{}C-{}C || {}.{}'.format(day1[1], day1[2], day1[3], day1[4]))
+        self.lblWeatherTempDay_2.setText('{}C-{}C || {}.{}'.format(day2[1], day2[2], day2[3], day2[4]))
+        self.lblWeatherTempDay_3.setText('{}C-{}C || {}.{}'.format(day3[1], day3[2], day3[3], day3[4]))
+        self.lblWeatherTempDay_4.setText('{}C-{}C || {}.{}'.format(day4[1], day4[2], day4[3], day4[4]))
+        self.lblWeatherTempDay_5.setText('{}C-{}C || {}.{}'.format(day5[1], day5[2], day5[3], day5[4]))
+        self.lblWeatherTempDay_6.setText('{}C-{}C || {}.{}'.format(day6[1], day6[2], day6[3], day6[4]))
+        self.lblWeatherTempDay_7.setText('{}C-{}C || {}.{}'.format(day7[1], day7[2], day7[3], day7[4]))
+        self.lblWeatherTempDay_8.setText('{}C-{}C || {}.{}'.format(day8[1], day8[2], day8[3], day8[4]))
+
+        # icon (5 icon)
+        self.lblIconDay.setPixmap(showIcon(day1[5], 0))
+        self.lblIconDay_2.setPixmap(showIcon(day2[5], 0))
+        self.lblIconDay_3.setPixmap(showIcon(day3[5], 0))
+        self.lblIconDay_4.setPixmap(showIcon(day4[5], 0))
+        self.lblIconDay_5.setPixmap(showIcon(day5[5], 0))
+        self.lblIconDay_6.setPixmap(showIcon(day6[5], 0))
+        self.lblIconDay_7.setPixmap(showIcon(day7[5], 0))
+        self.lblIconDay_8.setPixmap(showIcon(day8[5], 0))
+
+        # part of Day temp (6mornig - 7day - 8eve - 9night)
+        self.lblTempMor.setText('{}C'.format(day1[6]))
+        self.lblTempAfter.setText('{}C'.format(day1[7]))
+        self.lblTempEve.setText('{}C'.format(day1[8]))
+        self.lblTempNight.setText('{}C'.format(day1[9]))
+
+        self.lblTempMor_2.setText('{}C'.format(day2[6]))
+        self.lblTempAfter_2.setText('{}C'.format(day2[7]))
+        self.lblTempEve_2.setText('{}C'.format(day2[8]))
+        self.lblTempNight_2.setText('{}C'.format(day2[9]))
+
+        self.lblTempMor_3.setText('{}C'.format(day3[6]))
+        self.lblTempAfter_3.setText('{}C'.format(day3[7]))
+        self.lblTempEve_3.setText('{}C'.format(day3[8]))
+        self.lblTempNight_3.setText('{}C'.format(day3[9]))
+
+        self.lblTempMor_4.setText('{}C'.format(day4[6]))
+        self.lblTempAfter_4.setText('{}C'.format(day4[7]))
+        self.lblTempEve_4.setText('{}C'.format(day4[8]))
+        self.lblTempNight_4.setText('{}C'.format(day4[9]))
+
+        self.lblTempMor_5.setText('{}C'.format(day5[6]))
+        self.lblTempAfter_5.setText('{}C'.format(day5[7]))
+        self.lblTempEve_5.setText('{}C'.format(day5[8]))
+        self.lblTempNight_5.setText('{}C'.format(day5[9]))
+
+        self.lblTempMor_6.setText('{}C'.format(day6[6]))
+        self.lblTempAfter_6.setText('{}C'.format(day6[7]))
+        self.lblTempEve_6.setText('{}C'.format(day6[8]))
+        self.lblTempNight_6.setText('{}C'.format(day6[9]))
+
+        self.lblTempMor_7.setText('{}C'.format(day7[6]))
+        self.lblTempAfter_7.setText('{}C'.format(day7[7]))
+        self.lblTempEve_7.setText('{}C'.format(day7[8]))
+        self.lblTempNight_7.setText('{}C'.format(day7[9]))
+
+        self.lblTempMor_8.setText('{}C'.format(day8[6]))
+        self.lblTempAfter_8.setText('{}C'.format(day8[7]))
+        self.lblTempEve_8.setText('{}C'.format(day8[8]))
+        self.lblTempNight_8.setText('{}C'.format(day8[9]))
 
     def searchOnClick(self):
         # print(self.provList.currentText())

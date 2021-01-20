@@ -142,16 +142,15 @@ class ServerThread(QtCore.QThread):
                                        currWeather.getWeatherIcon(), currWeather.getSunriseTime(),
                                        currWeather.getSunSetTime(), currWeather.getTempFeelsLike(),
                                        currWeather.getPercentClouds(), currWeather.getPressure())
-                # 0 dt, 1 icon, 2 minTemp, 3 maxTemp, 4 weatherDesc, 5 humidity, 6 wind_speed, 7 morTemp, 8 dayTemp,
-                # 9 eveTemp, 10 nightTemp, 11 sunrise, 12 sunset, 13 clouds, 14 pressure
+                # 0 dt, 1 tempmin, 2 tepmmax, 3 weather, 4 weatherDesc, 5 icon, 6 morTemp, 7 dayTemp,
+                # 8 eveTemp, 9 nightTemp, 10 sunrise, 11 sunset
                 dailyForeCast = ''
                 for i in dailyList:
-                    dailyFore = '{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}' \
-                                ''.format(i.getDtInDate(), i.getWeatherIcon(), i.getTempMin(), i.getTempMax(),
-                                          i.getWeatherDescription(), i.getHumidity(), i.getWindSpeed(),
+                    dailyFore = '{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}' \
+                                ''.format(i.getDtInDate(), i.getTempMin(), i.getTempMax(), i.getMainWeather(),
+                                          i.getWeatherDescription(), i.getWeatherIcon(),
                                           i.getTempAtMorning(), i.getTempAtDay(), i.getTempAtEvening(),
-                                          i.getTempAtNight(), i.getSunriseTime(), i.getSunSetTime(),
-                                          i.getPercentClouds(), i.getPressure())
+                                          i.getTempAtNight(), i.getSunriseTime(), i.getSunSetTime())
                     dailyForeCast += '+{}'.format(dailyFore)
 
                 # 0 dt, 1 temp, 2 icon, 3 desc, 4 wind, 5 cloud
